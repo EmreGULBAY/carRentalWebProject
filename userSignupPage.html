@@ -1,0 +1,150 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!DOCTYPE html>
+<html>
+<style>
+    .back{
+        background-image:url('araba1.jpg');
+        background-size: cover;
+    }
+    .name{
+        position: relative;
+        left:110px;
+    }
+    .pass{
+        position: relative;
+        left:75px;
+
+    }
+    .pass2{
+        position: relative;
+        left:8px;
+
+    }
+    .but{
+        position:relative;
+        top:10px;
+        left:150px;
+    }
+    .graySquare{
+        position: absolute;
+        width: 400px;
+        height: 200px;
+        z-index: 15;
+        top: 60%;
+        left: 20%;
+        margin: -200px 0 0 -200px;
+        background: lightgray;
+        border:solid black 5px;
+        background-color:rgba(255,255,255,0.3);
+    }
+    form{
+        position relative;
+        top:-150px;
+        left:-150px;
+    }
+    #Info {
+        position: absolute;
+        display: none;
+        width: 700px;
+        height: 400px;
+        top: 200px;
+        left: 650px;
+        background-color: rgba(255,255,255,0.5);
+        border:solid black 5px;
+    }
+    #Contact {
+        position: absolute;
+        display: none;
+        width: 700px;
+        height: 400px;
+        top: 200px;
+        left: 650px;
+        background-color: rgba(255,255,255,0.7);
+        border:solid black 5px;
+    }
+    .navbar a {
+        float: right;
+        color: white;
+        padding: 30px 60px;
+        font-size: 20px;
+    }
+    .navbar a:hover{
+        background-color: aqua;
+        color: black;
+        padding:33px 65px;
+        font-size:30px;
+    }
+    .navbar {
+        overflow: hidden;
+    }
+
+
+
+</style>
+<div class="navbar">
+    <a class="fa fa-home" onclick="closeAll()" href="#home" style="position: absolute;right:1250px;color:black" > Home</a>
+    <script>
+        function closeAll(){
+            closeInfo();
+            closeContact();
+        }
+    </script>
+    <a class="fa fa-book" onclick="openInfo()" href="#about"> About</a>
+    <script>
+        function openInfo() {
+            document.getElementById("Info").style.display = "block";
+            closeContact();
+        }
+        function closeInfo() {
+            document.getElementById("Info").style.display = "none";
+        }
+    </script>
+    <a class= "fa fa-phone" onclick="openContact()" href="#contact"> Contact</a>
+    <script>
+        function openContact() {
+            document.getElementById("Contact").style.display = "block";
+            closeInfo();
+        }
+        function closeContact() {
+            document.getElementById("Contact").style.display = "none";
+        }
+    </script>
+</div>
+<div id="Info" onclick="closeInfo()">
+    <div >
+        <h1 style="text-align: center;font-size: 40px">Rent a Car</h1>
+        <p  style=" position:absolute;left:10px;font-size:20px;">This is a car rental website.You can rent a car online.</p>
+    </div>
+</div>
+<div id="Contact" onclick="closeContact()">
+    <div >
+        <h2 style="font-size: 40px; width:500px;position:relative;left:125px;">Our connection addresses</h2>
+        <br>
+        <br>
+        <a class="fa fa-facebook" style="font-size: 40px;position:relative;left:100px;
+         color:darkblue" href="https://www.facebook.com/">
+            Facebook</a>
+        <br>
+        <br>
+        <br>
+        <a class="fa fa-twitter" style="font-size: 40px;position:relative;left:100px;
+         color:cornflowerblue" href="https://www.twitter.com/" >
+            Twitter</a>
+    </div>
+</div>
+<body class="back">
+
+<div class="graySquare">
+<form>
+    <br><br>
+    <label  for="name" style="font-size: 25px;padding: 10px">Name:</label>
+    <input class="name" type="text" name="name" placeholder="enter your name" required><br><br>
+    <label for="password" style="font-size: 25px;padding:10px;">Password:</label>
+    <input class="pass" type="password" name="password" placeholder="enter your password" required><br><br>
+    <label for="password2" style="font-size: 25px;padding:10px;">Password Again:</label>
+    <input class="pass2" type="password" name="password2" placeholder="enter your password" required>
+    <input class="but" type="submit" value="Save" formaction="firstLogin.html">
+</form>
+</div>
+</body>
+</html>
