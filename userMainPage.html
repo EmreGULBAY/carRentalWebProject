@@ -1,0 +1,299 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<style>
+    @keyframes anime{
+        0%{
+            background: url("araba1.jpg") no-repeat fixed;
+            background-size: cover;
+        }
+
+        25%{
+            background: url("araba2.jpg") no-repeat fixed;
+            background-size: cover;
+
+        }
+
+        50%{
+            background: url("araba3.jpg") no-repeat fixed;
+            background-size: cover;
+        }
+
+        75%{
+            background: url("araba4.jpg") no-repeat fixed;
+            background-size: cover;
+        }
+
+        100%{
+            background: url("araba1.jpg") no-repeat fixed;
+            background-size: cover;
+        }
+    }
+    body{
+        animation: anime 20s infinite;
+    }
+    #Info {
+        position: absolute;
+        display: none;
+        width: 700px;
+        height: 400px;
+        top: 200px;
+        left: 400px;
+        background-color: rgba(255,255,255,0.5);
+        border:solid black 5px;
+    }
+    #Contact {
+        position: absolute;
+        display: none;
+        width: 700px;
+        height: 400px;
+        top: 200px;
+        left: 400px;
+        background-color: rgba(255,255,255,0.7);
+        border:solid black 5px;
+    }
+    #aboutSite {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        font-size: 20px;
+        color: black;
+
+    }
+    #aboutContact {
+        position: absolute;
+        top: 20px;
+        left: 100px;
+        font-size: 20px;
+        color: black;
+
+    }
+    .navbar a {
+        float: left;
+        color: white;
+        padding: 30px 60px;
+        font-size: 20px;
+    }
+    .navbar a:hover{
+        background-color: aqua;
+        color: black;
+        padding:33px 65px;
+        font-size:30px;
+    }
+    .navbar {
+        overflow: hidden;
+    }
+    #Profile{
+        position:absolute;
+        width: 200px;
+        height: 250px;
+        background-color: rgba(255,255,255,0.7);
+        border:solid black 5px;
+        display:none;
+        left:1220px;
+        top:105px;
+    }
+    #ChangePass{
+        position:absolute;
+        width: 400px;
+        height: 200px;
+        background-color: rgba(255,255,255,0.7);
+        border:solid black 5px;
+        display: none;
+        top:250px;
+        left:540px;
+    }
+    .closeButton{
+        position:absolute;
+        bottom:175px;
+        left:370px;
+        background:rgba(0,0,0,0);
+        color:black;
+        border:none;
+    }
+    .closeButton:hover{
+        background: red;
+        color:white;
+    }
+    #Out{
+        position:absolute;
+        width: 400px;
+        height: 200px;
+        background-color: rgba(255,255,255,0.7);
+        border:solid black 5px;
+        display: none;
+        top:250px;
+        left:540px;
+    }
+    #Wallet{
+        position:absolute;
+        width: 400px;
+        height: 300px;
+        background-color: rgba(255,255,255,0.7);
+        border:solid black 5px;
+        display: none;
+        left:550px;
+        top:230px;
+    }
+    .closeButton2{
+        position:absolute;
+        bottom:275px;
+        left:370px;
+        background:rgba(0,0,0,0);
+        color:black;
+        border:none;
+    }
+    .closeButton2:hover{
+        background: red;
+        color:white;
+    }
+
+</style>
+<html lang="en">
+<body>
+<div class="navbar">
+    <a class="fa fa-home" onclick="closeAll()" href="userMainPage.html"
+       style="color:red"> Home</a>
+    <script>
+        function closeAll(){
+            closeInfo();
+            closeContact();
+        }
+    </script>
+    <a class="fa fa-book" onclick="openInfo()" style="position:absolute;left:500px" href="#Info"> About</a>
+    <script>
+        function openInfo() {
+            document.getElementById("Info").style.display = "block";
+            closeContact();
+            closeOut();
+            closeChange();
+            closeProfile();
+        }
+        function closeInfo() {
+            document.getElementById("Info").style.display = "none";
+        }
+    </script>
+    <a class= "fa fa-phone" onclick="openContact()" style="position:absolute;left:700px"href="#contact"> Contact</a>
+    <script>
+        function openContact() {
+            document.getElementById("Contact").style.display = "block";
+            closeInfo();
+            closeOut();
+            closeChange();
+            closeProfile();
+        }
+        function closeContact() {
+            document.getElementById("Contact").style.display = "none";
+        }
+    </script>
+    <a class="fa fa-address-card" onclick="openProfile()" href="#profile" style="position:absolute;left:1200px">Profile</a>
+    <script>
+        function openProfile(){
+            document.getElementById("Profile").style.display="block";
+            closeAll();
+        }
+        function closeProfile(){
+            document.getElementById("Profile").style.display="none";
+        }
+        function openChange(){
+                closeOut();
+                closeContact();
+                closeInfo();
+                closeWallet();
+            document.getElementById("ChangePass").style.display="block";
+        }
+        function closeChange(){
+            document.getElementById("ChangePass").style.display="none";
+        }
+        function openOut(){
+            closeChange();
+            closeContact();
+            closeInfo();
+            closeWallet();
+            document.getElementById("Out").style.display="block";
+        }
+        function closeOut(){
+            document.getElementById("Out").style.display="none";
+        }
+        function openWallet(){
+            closeContact();
+            closeInfo();
+            closeChange();
+            closeOut();
+            document.getElementById("Wallet").style.display="block";
+        }
+        function closeWallet(){
+            document.getElementById("Wallet").style.display="none";
+        }
+    </script>
+</div>
+<div id="Info" onclick="closeInfo()">
+    <div >
+        <h1 style="text-align: center;font-size: 40px">Rent a Car</h1>
+        <p  style=" position:absolute;left:10px;font-size:20px;">This is a car rental website.You can rent a car online.</p>
+    </div>
+</div>
+<div id="Profile" onclick="closeProfile()">
+    <p style="position:relative;left:20px;font-size:20px; ">Name : X</p>
+    <p style="position:relative;left:20px;font-size:20px; ">Wallet : X</p>
+    <input type="submit" onclick="openWallet()" value="Add amount" style="position:relative;left:53px;"><br><br>
+    <input style=" position:relative;left:35px" type="submit" onclick="openChange()" value="Change Password"><br><br>
+    <input style=" position:relative;left:65px" type="submit" onclick="openOut()" value="Sign Out">
+
+</div>
+<div id="Out">
+    <form>
+    <br><br>
+    <h1 style="text-align: center">Are You Sure ?</h1>
+    <input type="submit" style="position:relative;left:75px;" value="Yes" formaction="firstLogin.php">
+    <input type="submit" style="position: relative;left:250px;" value="No" onclick="closeOut()">
+        <input class="closeButton"type="submit" value="X" onclick="closeOut()">
+    </form>
+</div>
+<div id="ChangePass">
+    <form>
+        <br><br>
+        <label  style="font-size:18px; padding:5px;">Old Password:</label>
+        <input name="pass1" style="position:absolute;right:105px;" placeholder="Enter your password" required><br><br>
+        <label  style="font-size:18px; padding:5px;">New Password:</label>
+        <input name="pass2" placeholder="Enter your password" required><br><br>
+        <label  style="font-size:18px; padding:5px;">New Password:</label>
+        <input name="pass3" placeholder="Enter your password" required>
+        <input type="submit" value="save">
+        <input class="closeButton" type="submit" value="X" onclick="closeChange()">
+    </form>
+</div>
+<div id="Wallet">
+    <form>
+        <br><br>
+        <input style="position:relative;left:100px;" placeholder="Enter your car number"><br><br>
+        <input style="position:relative;left:100px;" placeholder="Enter your name on card"><br><br>
+        <input style="position:relative;left:100px;" placeholder= "Date on card"><br><br>
+        <input style="position:relative;left:100px;" placeholder="Enter PVC"><br><br>
+        <input style="position:relative;left:100px;" placeholder="Enter Amount"><br><br>
+        <input type="submit" value="Save" style="position:absolute;left:160px;">
+        <input class="closeButton2" type="submit" value="X" onclick="closeWallet()">
+    </form>
+</div>
+<div id="Contact" onclick="closeContact()">
+    <div >
+        <h2 style="font-size: 40px; width:500px;position:relative;left:125px;">Our connection addresses</h2>
+        <br>
+        <br>
+        <a class="fa fa-facebook" style="font-size: 40px;position:relative;left:100px;
+         color:darkblue" href="https://www.facebook.com/">
+            Facebook</a>
+        <br>
+        <br>
+        <br>
+        <a class="fa fa-twitter" style="font-size: 40px;position:relative;left:100px;
+         color:cornflowerblue" href="https://www.twitter.com/" >
+            Twitter</a>
+    </div>
+</div>
+
+
+</body>
+</html>
