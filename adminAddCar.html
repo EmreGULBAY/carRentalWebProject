@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -24,31 +23,35 @@
         .navbar {
             overflow: hidden;
         }
-        @keyframes anime {
-            0% {
-                background: url("araba1.jpg") no-repeat fixed;
+        @keyframes anime{
+            0%{
+                background: url("araba1.jpg") no-repeat fixed center center;
                 background-size: cover;
+                max-width: 100%;
             }
 
-            25% {
-                background: url("araba2.jpg") no-repeat fixed;
+            25%{
+                background: url("araba2.jpg") no-repeat fixed center center;
                 background-size: cover;
-
+                max-width: 100%;
             }
 
-            50% {
-                background: url("araba3.jpg") no-repeat fixed;
+            50%{
+                background: url("araba3.jpg") no-repeat fixed center center;
                 background-size: cover;
+                max-width: 100%;
             }
 
-            75% {
-                background: url("araba4.jpg") no-repeat fixed;
+            75%{
+                background: url("araba4.jpg") no-repeat fixed center center;
                 background-size: cover;
+                max-width: 100%;
             }
 
-            100% {
-                background: url("araba1.jpg") no-repeat fixed;
+            100%{
+                background: url("araba1.jpg") no-repeat fixed center center;
                 background-size: cover;
+                max-width: 100%;
             }
         }
         #Add{
@@ -100,7 +103,9 @@
     <body>
 <div class="navbar">
     <a class="fa fa-home" href="adminPage.html"
-       style="color:red"> Home</a>
+       style="color:red;text-decoration: none"> Home</a>
+    <a  href="firstLogin.html"
+        style="color:red;text-decoration: none;left:45%;position: absolute"> Sign Out</a>
 </div>
 <div id="Add">
     <form>
