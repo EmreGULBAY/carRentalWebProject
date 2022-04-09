@@ -1,150 +1,229 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!DOCTYPE html>
 <html>
-<style>
-    .back{
-        background-image:url('araba1.jpg');
-        background-size: cover;
-    }
-    .name{
-        position: relative;
-        left:110px;
-    }
-    .pass{
-        position: relative;
-        left:75px;
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .back{
+            background-image:url('araba1.jpg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment:fixed;
+            background-size:cover;
+            padding-left:8% ;
+            padding-right:8%;
+            max-width: 100%;
+        }
+        input[type=text]{
+            width: 80%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        input[type=password]{
+            width: 80%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        input[type=submit] {
+            color: black;
+            padding: 5px 10px;
+            border: 2px solid black;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+        #graySquare{
+            position: relative;
+            display: inline-block;
+            width: 40%;
+            height: 30%;
+            top: 30%;
+            left: 10%;
+            margin: 10px;
+            border:solid black 5px;
+            background: rgba(255, 255, 255, 0.5) fixed center center;
+            max-width: 100%;
+            background-size:contain;
+            padding:20px;
+        }
+        #Info {
+            position: relative;
+            display: none;
+            width: 40%;
+            height: 33%;
+            top: 20%;
+            left: 10%;
+            margin: 10px;
+            border:solid black 5px;
+            background: rgba(255, 255, 255, 0.5) fixed center center;
+            max-width: 100%;
+            background-size:contain;
+            padding:20px;
+            text-decoration: none;
+        }
+        #Contact {
+            position: relative;
+            display: none;
+            width: 40%;
+            height: 40%;
+            top: 20%;
+            left: 10%;
+            margin: 10px;
+            border:solid black 5px;
+            background: rgba(255, 255, 255, 0.5) fixed center center;
+            max-width: 100%;
+            background-size:contain;
+            padding:20px;
+            text-decoration: none;
+        }
+        .navbar a {
+            color: black;
+            padding: 30px 60px;
+            font-size: 2vw;
+        }
+        .navbar a:hover{
+            background-color: aqua;
+            color: red;
+        }
+        .navbar {
+            float:right;
+            overflow: hidden;
+        }
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+        .col-25 {
+            float: left;
+            width: 25%;
+            margin-top: 6px;
+        }
 
+        .col-75 {
+            float: left;
+            width: 75%;
+            margin-top: 6px;
+        }
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        @media screen and (max-width: 600px) {
+            .navbar a{
+                padding:10px 10px;
+                font-size:4vw;
+            }
+            #Contact{
+                height:20%;
+            }
+            #Info{
+                font-size:4vw;
+                height:12%;
+            }
+            #graySquare{
+                height:50%;
+                top:5%;
+            }
+            .col-25, .col-75, input[type=submit] {
+                width: 100%;
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+<body class="back">
+<script>
+    function closeAll(){
+        closeInfo();
+        closeContact();
     }
-    .pass2{
-        position: relative;
-        left:8px;
-
+    function closeGray(){
+        document.getElementById("graySquare").style.display="none";
     }
-    .but{
-        position:relative;
-        top:10px;
-        left:150px;
+    function openGray(){
+        document.getElementById("graySquare").style.display="inline-block";
     }
-    .graySquare{
-        position: absolute;
-        width: 400px;
-        height: 200px;
-        z-index: 15;
-        top: 60%;
-        left: 20%;
-        margin: -200px 0 0 -200px;
-        background: lightgray;
-        border:solid black 5px;
-        background-color:rgba(255,255,255,0.3);
+    function openInfo() {
+        document.getElementById("Info").style.display = "block";
+        closeContact();
+        closeGray();
     }
-    form{
-        position relative;
-        top:-150px;
-        left:-150px;
+    function closeInfo() {
+        document.getElementById("Info").style.display = "none";
+        openGray();
     }
-    #Info {
-        position: absolute;
-        display: none;
-        width: 700px;
-        height: 400px;
-        top: 200px;
-        left: 650px;
-        background-color: rgba(255,255,255,0.5);
-        border:solid black 5px;
+    function openContact() {
+        document.getElementById("Contact").style.display = "block";
+        closeInfo();
+        closeGray();
     }
-    #Contact {
-        position: absolute;
-        display: none;
-        width: 700px;
-        height: 400px;
-        top: 200px;
-        left: 650px;
-        background-color: rgba(255,255,255,0.7);
-        border:solid black 5px;
+    function closeContact() {
+        document.getElementById("Contact").style.display = "none";
+        openGray();
     }
-    .navbar a {
-        float: right;
-        color: white;
-        padding: 30px 60px;
-        font-size: 20px;
-    }
-    .navbar a:hover{
-        background-color: aqua;
-        color: black;
-        padding:33px 65px;
-        font-size:30px;
-    }
-    .navbar {
-        overflow: hidden;
-    }
-
-
-
-</style>
+</script>
 <div class="navbar">
-    <a class="fa fa-home" onclick="closeAll()" href="#home" style="position: absolute;right:1250px;color:black" > Home</a>
-    <script>
-        function closeAll(){
-            closeInfo();
-            closeContact();
-        }
-    </script>
-    <a class="fa fa-book" onclick="openInfo()" href="#about"> About</a>
-    <script>
-        function openInfo() {
-            document.getElementById("Info").style.display = "block";
-            closeContact();
-        }
-        function closeInfo() {
-            document.getElementById("Info").style.display = "none";
-        }
-    </script>
-    <a class= "fa fa-phone" onclick="openContact()" href="#contact"> Contact</a>
-    <script>
-        function openContact() {
-            document.getElementById("Contact").style.display = "block";
-            closeInfo();
-        }
-        function closeContact() {
-            document.getElementById("Contact").style.display = "none";
-        }
-    </script>
+    <a class="fa fa-home" onclick="closeAll()" href="#home" style="text-decoration:none;position:absolute;left:0%;"> Home</a>
+    <a class="fa fa-book" onclick="openInfo()" href="#Info" style="text-decoration:none;"> About</a>
+    <a class= "fa fa-phone" onclick="openContact()" href="#contact" style="
+    text-decoration:none;"> Contact</a>
 </div>
 <div id="Info" onclick="closeInfo()">
-    <div >
-        <h1 style="text-align: center;font-size: 40px">Rent a Car</h1>
-        <p  style=" position:absolute;left:10px;font-size:20px;">This is a car rental website.You can rent a car online.</p>
+    <div>
+        <h1 style="text-align: center;font-size: 3vw;">Rent a Car</h1>
+        <p  style=" position:absolute;left:10px;font-size: 2vw;">This is a car rental website.You can rent a car online.</p>
     </div>
 </div>
 <div id="Contact" onclick="closeContact()">
-    <div >
-        <h2 style="font-size: 40px; width:500px;position:relative;left:125px;">Our connection addresses</h2>
-        <br>
-        <br>
-        <a class="fa fa-facebook" style="font-size: 40px;position:relative;left:100px;
+    <div>
+        <h2 style="font-size: 3vw;">Our connection addresses</h2>
+        <a class="fa fa-facebook" style="font-size: 2vw;
          color:darkblue" href="https://www.facebook.com/">
             Facebook</a>
         <br>
         <br>
-        <br>
-        <a class="fa fa-twitter" style="font-size: 40px;position:relative;left:100px;
+        <a class="fa fa-twitter" style="font-size: 2vw;
          color:cornflowerblue" href="https://www.twitter.com/" >
             Twitter</a>
     </div>
 </div>
-<body class="back">
-
-<div class="graySquare">
-<form>
-    <br><br>
-    <label  for="name" style="font-size: 25px;padding: 10px">Name:</label>
-    <input class="name" type="text" name="name" placeholder="enter your name" required><br><br>
-    <label for="password" style="font-size: 25px;padding:10px;">Password:</label>
-    <input class="pass" type="password" name="password" placeholder="enter your password" required><br><br>
-    <label for="password2" style="font-size: 25px;padding:10px;">Password Again:</label>
-    <input class="pass2" type="password" name="password2" placeholder="enter your password" required>
-    <input class="but" type="submit" value="Save" formaction="firstLogin.html">
-</form>
+<div id="graySquare">
+    <form>
+        <div class="row">
+            <div class="col-25">
+                <label for="name">Name</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="name">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="pass">Password</label>
+            </div>
+            <div class="col-75">
+                <input type="password" id="pass">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="pass2">Password Again</label>
+            </div>
+            <div class="col-75">
+                <input type="password" id="pass2">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <input type="submit" value="Save" formaction="firstLogin.html">
+        </div>
+    </form>
 </div>
+
 </body>
 </html>
