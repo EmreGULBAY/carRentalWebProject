@@ -35,6 +35,7 @@
             max-width: 100%;
         }
     }
+
     body{
         animation: anime 20s infinite;
     }
@@ -91,6 +92,7 @@
         left:80%;
         top:12%;
         padding: 20px;
+        border-radius: 20px;
     }
     #ChangePass{
         position: relative;
@@ -153,12 +155,12 @@
 
     }
     #advertisement{
-        position: relative;
+        position: absolute;
         display: inline-block;
         width:25%;
         height: 20%;
-        top: 40%;
-        left: 5%;
+        top: 45%;
+        left: 65%;
         margin: 10px;
         border:solid black 5px;
         background: rgba(255, 255, 255, 0.5) fixed center center;
@@ -167,7 +169,7 @@
         padding:20px;
     }
     #advertisement2{
-        position: relative;
+        position: absolute;
         display: inline-block;
         width:25%;
         height: 20%;
@@ -317,15 +319,17 @@
         function openProfile(){
             document.getElementById("Profile").style.display="block";
             closeAll();
-
+            closeAdv();
         }
         function closeProfile(){
             document.getElementById("Profile").style.display="none";
+            openAdv();
         }
         function openChange(){
                 closeContact();
                 closeInfo();
                 closeWallet();
+                closeAdv()
             document.getElementById("ChangePass").style.display="block";
         }
         function closeChange(){
@@ -335,6 +339,7 @@
             closeContact();
             closeInfo();
             closeChange();
+            closeAdv()
             document.getElementById("Wallet").style.display="inline-block";
         }
         function closeWallet(){
