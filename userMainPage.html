@@ -148,34 +148,37 @@
         display: table;
         clear: both;
     }
-    @media screen and (max-width: 600px) {
-        .closeButton2{
-            left:45%;
-        }
-        .navbar a{
-            padding:10px 10px;
-            font-size:4vw;
-        }
-        #Contact{
-            height:5%;
-        }
-        #Info{
-            height:5%;
-        }
-        #Wallet{
-            height:65%;
-        }
-        #ChangePass{
-            height:60%;
-        }
-        .col-25, .col-75{
-            width: 100%;
-            margin-top: 0;
-        }
-        #Profile{
-            left:70%;
-            height:25%;
-        }
+    .advert{
+        font-size:2vw;
+
+    }
+    #advertisement{
+        position: relative;
+        display: inline-block;
+        width:25%;
+        height: 20%;
+        top: 40%;
+        left: 5%;
+        margin: 10px;
+        border:solid black 5px;
+        background: rgba(255, 255, 255, 0.5) fixed center center;
+        max-width: 100%;
+        background-size:contain;
+        padding:20px;
+    }
+    #advertisement2{
+        position: relative;
+        display: inline-block;
+        width:25%;
+        height: 20%;
+        top: 45%;
+        left: 5%;
+        margin: 10px;
+        border:solid black 5px;
+        background: rgba(255, 255, 255, 0.5) fixed center center;
+        max-width: 100%;
+        background-size:contain;
+        padding:20px;
     }
     .but{
         width:75%;
@@ -192,6 +195,7 @@
         #Contact{
             height:30%;
         }
+
         #Info{
             height:25%;
         }
@@ -206,9 +210,53 @@
             height:35%;
 
         }
+        #advertisement{
+            height:15%;
+        }
+        #advertisement2{
+            height:15%;
+        }
         .col-25, .col-75 {
             width: 100%;
             margin-top: 0;
+        }
+    }
+    @media screen and (max-width: 900px) {
+        .closeButton2{
+            left:45%;
+        }
+        .navbar a{
+            padding:10px 10px;
+            font-size:4vw;
+        }
+        #Contact{
+            height:5%;
+        }
+        #Info{
+            height:5%;
+        }
+        #Wallet{
+            height:65%;
+        }
+        #advertisement{
+            height:20%;
+        }
+        #ChangePass{
+            height:60%;
+        }
+        #advertisement2{
+            height:20%;
+        }
+        .col-25, .col-75{
+            width: 100%;
+            margin-top: 0;
+        }
+        .advert{
+            font-size:3vw;
+        }
+        #Profile{
+            left:70%;
+            height:25%;
         }
     }
 
@@ -227,15 +275,25 @@
     </script>
     <a class="fa fa-book" onclick="openInfo()" style="position:absolute;left:20%;text-decoration: none;" href="#Info"> About</a>
     <script>
+        function closeAdv(){
+            document.getElementById("advertisement").style.display="none";
+            document.getElementById("advertisement2").style.display="none";
+        }
+        function openAdv(){
+            document.getElementById("advertisement").style.display="block";
+            document.getElementById("advertisement2").style.display="block";
+        }
         function openInfo() {
             document.getElementById("Info").style.display = "block";
             closeContact();
             closeChange();
             closeProfile();
             closeWallet();
+            closeAdv();
         }
         function closeInfo() {
             document.getElementById("Info").style.display = "none";
+            openAdv();
         }
     </script>
     <a class= "fa fa-phone" onclick="openContact()" style="position:absolute;left:40%;text-decoration: none;"href="#contact"> Contact</a>
@@ -246,9 +304,11 @@
             closeChange();
             closeProfile();
             closeWallet();
+            closeAdv();
         }
         function closeContact() {
             document.getElementById("Contact").style.display = "none";
+            openAdv();
         }
     </script>
     <a class="fa fa-car" href="userRentCar.html" style="position: absolute;left:60%;text-decoration: none;">Rent</a>
@@ -257,6 +317,7 @@
         function openProfile(){
             document.getElementById("Profile").style.display="block";
             closeAll();
+
         }
         function closeProfile(){
             document.getElementById("Profile").style.display="none";
@@ -408,7 +469,11 @@
             Twitter</a>
     </div>
 </div>
-
-
+<div id="advertisement">
+    <h2 class="advert">Rent between 18.00 and 00.00 for a special price!</h2>
+</div>
+<div id="advertisement2" >
+    <h2 class="advert">We have brand-new cars now on our filo and waiting four you!</h2>
+</div>
 </body>
 </html>
