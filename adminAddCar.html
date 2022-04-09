@@ -1,0 +1,157 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <style>
+        body{
+            margin: 0;
+            animation:anime 25s infinite alternate;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        .navbar a {
+            float: left;
+            color: black;
+            padding: 30px 60px;
+            font-size: 20px;
+        }
+        .navbar a:hover{
+            background-color: aqua;
+            color: red;
+        }
+        .navbar {
+            overflow: hidden;
+        }
+        @keyframes anime {
+            0% {
+                background: url("araba1.jpg") no-repeat fixed;
+                background-size: cover;
+            }
+
+            25% {
+                background: url("araba2.jpg") no-repeat fixed;
+                background-size: cover;
+
+            }
+
+            50% {
+                background: url("araba3.jpg") no-repeat fixed;
+                background-size: cover;
+            }
+
+            75% {
+                background: url("araba4.jpg") no-repeat fixed;
+                background-size: cover;
+            }
+
+            100% {
+                background: url("araba1.jpg") no-repeat fixed;
+                background-size: cover;
+            }
+        }
+        #Add{
+            position: relative;
+            display: block;
+            width:30%;
+            height: 60%;
+            top: 15%;
+            left: 35%;
+            margin: 10px;
+            border:solid black 5px;
+            background: rgba(255, 255, 255, 0.5) fixed center center;
+            max-width: 100%;
+            background-size:contain;
+            padding:20px;
+        }
+        @media only screen and (max-width: 1200px) {
+
+        }
+        .closeButton2{
+            position:absolute;
+            top:3%;
+            left:92%;
+            background:rgba(0,0,0,0);
+            color:black;
+            border:none;
+        }
+        .closeButton2:hover{
+            background: red;
+            color:white;
+        }
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+        .inputs{
+            width: 70%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+    <body>
+<div class="navbar">
+    <a class="fa fa-home" href="adminPage.html"
+       style="color:red"> Home</a>
+</div>
+<div id="Add">
+    <form>
+        <div class="row">
+            <div class="col-25">
+                <label for="carId">Car ID</label>
+            </div>
+            <div class="col-75">
+                <input class="inputs" type="text" id="carId">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="picture">Picture</label>
+            </div>
+            <div class="col-75">
+                <input type="submit" value ="+" id="picture">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="locat">Location</label>
+            </div>
+            <div class="col-75">
+                <input class="inputs" type="text" id="locat">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="color">Color</label>
+            </div>
+            <div class="col-75">
+                <input class="inputs" type="password" id="color">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="rentCost">Rent cost/daily</label>
+            </div>
+            <div class="col-75">
+                <input class="inputs" type="text" id="rentCost">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <input type="submit" value="Save" onclick="closeWallet()">
+        </div>
+        <div class="row">
+            <br>
+            <input type="submit" value="X" onclick="closeWallet()" class="closeButton2">
+        </div>
+    </form>
+</div>
+</body>
