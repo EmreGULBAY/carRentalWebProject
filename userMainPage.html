@@ -100,7 +100,7 @@
         width:30%;
         height: 40%;
         top: 10%;
-        left: 25%;
+        left: 50%;
         margin: 10px;
         border:solid black 5px;
         background: rgba(255, 255, 255, 0.5) fixed center center;
@@ -111,10 +111,10 @@
     #Wallet{
         position: relative;
         display: none;
-        width:40%;
+        width:30%;
         height: 60%;
         top: 10%;
-        left: 25%;
+        left: 50%;
         margin: 10px;
         border:solid black 5px;
         background: rgba(255, 255, 255, 0.5) fixed center center;
@@ -152,15 +152,14 @@
     }
     .advert{
         font-size:2vw;
-
     }
     #advertisement{
         position: absolute;
         display: inline-block;
         width:25%;
         height: 20%;
-        top: 45%;
-        left: 65%;
+        top: 60%;
+        left: 5%;
         margin: 10px;
         border:solid black 5px;
         background: rgba(255, 255, 255, 0.5) fixed center center;
@@ -173,7 +172,7 @@
         display: inline-block;
         width:25%;
         height: 20%;
-        top: 45%;
+        top: 30%;
         left: 5%;
         margin: 10px;
         border:solid black 5px;
@@ -326,21 +325,21 @@
             openAdv();
         }
         function openChange(){
-                closeContact();
-                closeInfo();
-                closeWallet();
-                closeAdv()
             document.getElementById("ChangePass").style.display="block";
+            closeContact();
+            closeInfo();
+            closeWallet();
+            closeAdv();
         }
         function closeChange(){
             document.getElementById("ChangePass").style.display="none";
         }
         function openWallet(){
+            document.getElementById("Wallet").style.display="block";
             closeContact();
             closeInfo();
             closeChange();
-            closeAdv()
-            document.getElementById("Wallet").style.display="inline-block";
+            closeAdv();
         }
         function closeWallet(){
             document.getElementById("Wallet").style.display="none";
