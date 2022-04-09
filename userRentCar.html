@@ -1,0 +1,157 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+        body{
+            margin: 0;
+            animation:anime 25s infinite alternate;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        @keyframes anime {
+            0% {
+                background: url("araba1.jpg") no-repeat fixed;
+                background-size: cover;
+            }
+
+            25% {
+                background: url("araba2.jpg") no-repeat fixed;
+                background-size: cover;
+
+            }
+
+            50% {
+                background: url("araba3.jpg") no-repeat fixed;
+                background-size: cover;
+            }
+
+            75% {
+                background: url("araba4.jpg") no-repeat fixed;
+                background-size: cover;
+            }
+
+            100% {
+                background: url("araba1.jpg") no-repeat fixed;
+                background-size: cover;
+            }
+        }
+        .graySquare {
+            background-color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            width: 30%;
+            height: 40%;
+            padding: 20px;
+            border:solid 5px black;
+            position: absolute;
+            top: 25%;
+            left: 1%;
+        }
+        .catalog{
+            width: 60%;
+            height: 65%;
+            background-color: rgba(255, 255, 255, 0.5);
+            overflow-y: scroll;
+            border:black solid 5px;
+            position: absolute;
+            top: 25%;
+            left: 35%;
+        }
+        @media only screen and (max-width: 1200px) {
+            .graySquare{
+                top: 100px;
+                float: left;
+                width: 90%;
+                height: 400px;
+            }
+            .catalog{
+                top: 600px;
+                float: left;
+                width: 90%;
+                left: 1%;
+            }
+        }
+        .navbar a {
+            float: left;
+            color: black;
+            padding: 30px 60px;
+            font-size: 20px;
+        }
+        .navbar a:hover{
+            background-color: aqua;
+            color: red;
+        }
+        .navbar {
+            overflow: hidden;
+        }
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+        .inputs{
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a class="fa fa-home" onclick="closeAll()" href="userMainPage.html"
+       style="color:red"> Home</a>
+</div>
+<div class="graySquare">
+    <h1>Options</h1>
+    <p>City:
+        <select class="inputs" name="City" id="city">
+            <option value="Antalya">Antalya</option>
+            <option value="Izmir">İzmir</option>
+        </select>
+    <p>District:
+        <select class="inputs" name="City" id="district">
+            <option value="Some district relating to the city">Some district relating to the city </option>
+        </select>
+    </p>
+    <p>Color:
+        <select  name="City" id="colors">
+            <option value="red">Red </option>
+            <option value="blue">Blue </option>
+            <option value="green">Green </option>
+        </select>
+        <button style="background-color: #767C68; color:black;position:absolute;top:80%;left:45%"
+                type="button" name="button">Search</button>
+
+    </p>
+</div>
+<div  class="catalog">
+<form>
+    <div class="row">
+        <img src="araba1.jpg"  style="width:210px; height:130px;position:absolute;top:5%;">
+        <input type="submit" value="Rent" formaction="carRental.html" style="position:absolute;left:90%;top:5%;background: red
+;color:white;">
+    </div>
+</form>
+<form>
+    <div class="row">
+        <img src="araba2.jpg"  style="width:210px; height:130px;position:absolute;top:35%;">
+        <input type="submit" value="Rent" formaction="carRental.html" style="position:absolute;left:90%;top:40%;background: red
+;color:white;">
+    </div>
+</form>
+    <form>
+        <div class="row">
+        <img src="araba3.jpg"  style="width:210px; height:130px;position:absolute;top:65%;">
+            <input type="submit" value="Rent" formaction="carRental.html" style="position:absolute;left:90%;top:70%;background: red
+;color:white;">
+        </div>
+    </form>
+
+</div>
+</body>
+</html>
