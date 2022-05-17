@@ -8,12 +8,14 @@ $db = mysqli_connect("localhost", "root", "", "web");
 if ($db->connect_error) {
     die("Connection failed: " . $db->connect_error);
 }
-$dateErr="";
-$start = $end = "";
-$carid = $_SESSION["carid"];
+$dateError="";
+$start = "";
+$end = "";
+$carId = $_SESSION["carid"];
+$errors = array();
 $sql = "SELECT *
             FROM cars
-            WHERE carid = '$carid'
+            WHERE carid = '$carId'
             ";
 $result = $db->query($sql);
 $row = $result->fetch_assoc();
@@ -23,31 +25,42 @@ $rent = $row["rent"];
 $location = $row["city"];
 $info = $row["info"];
 $plate=$row["plate"];
+$dateNow = date("Y-m-d");
 if (isset($_POST['Rent'])) {
-    $start = $_POST["startdate"];
-    $end = $_POST["enddate"];
+    $start = $_POST["startDate"];
+    $end = $_POST["endDate"];
+    echo $dateNow;
+    echo " ".$start;
+    echo " ".$end;
     if (empty($start) || empty($end)) {
-        $dateErr = 'Choose start and end date first!';
+        array_push( $errors,'Choose start and end date first!');
     }
     $sql = "SELECT startdate,enddate
                 FROM reservation
-                WHERE carid = '$carid' AND
+                WHERE carid = '$carId' AND
                 ((startdate BETWEEN '$start' AND '$end') OR
                 (enddate BETWEEN '$start' AND '$end') OR
                 ('$start' BETWEEN startdate AND enddate) OR
                 ('$end' BETWEEN startdate AND enddate))";
     $result = $db->query($sql);
+
     if (mysqli_num_rows($result) > 0) {
-        $dateErr = "Sorry car is already reserved";
+        array_push( $errors,'Sorry the car is already reserved!');
     }
-    if (empty($dateErr)) {
+    if($end<=$start){
+        array_push( $errors,'End date cannot be lower or equal to start date!');
+    }
+    if($start<$dateNow|| $end<$dateNow){
+        array_push($errors,'Choose valid date!');
+    }
+    if (count($errors)==0) {
         $_SESSION["location"] = $location;
-        $_SESSION["carid"] = $carid;
+        $_SESSION["carid"] = $carId;
         $_SESSION["rent"] = $rent;
-        $_SESSION["startdate"] = $start;
-        $_SESSION["enddate"] = $end;
+        $_SESSION["startDate"] = $start;
+        $_SESSION["endDate"] = $end;
         $_SESSION["image"] = $image;
-        header('Location:userMainPage.php');
+        header('Location:op.php');
     }
 }
 ?>
@@ -61,6 +74,7 @@ background-attachment: fixed;
 background-size: cover;
 }
 @keyframes anime{
+
     0%{
         background: url("araba1.jpg") no-repeat fixed center center;
         background-size: cover;
@@ -90,6 +104,17 @@ background-size: cover;
         background-size: cover;
         max-width: 100%;
     }
+}
+.error {
+    width: 92%;
+    margin: 0px auto;
+    padding: 10px;
+    border: 1px solid #a94442;
+    color: #a94442;
+    background: #f2dede;
+    border-radius: 5px;
+    text-align: left;
+    position:absolute;
 }
  input date{
      margin-left: 2%;
@@ -138,18 +163,26 @@ background-size: cover;
 </style>
 <body>
 <div class="navbar">
-    <a class="fa fa-home" onclick="closeAll()" href="userMainPage.php"
+    <a class="fa fa-home" href="userMainPage.php"
        style="color:red"> Home</a>
 </div>
 <div class="graySquare">
-    <div class="round">
-        <img src="<?php echo $image; ?>"  style="width:30%; height:30%;position:absolute;top:5%;left:35%;border-radius: 85px">
+    <div>
+        <img src="<?php echo $image; ?>"  style="width:30%; height:30%;position:absolute;top:5%;left:35%;border-radius:85px;">
         <h2 style=";position:absolute;top:30%;">Location: <?php echo $location ?> </h2>
-        <h2 style="position:absolute;top:30%;left:80%;"><?php echo $rent; ?> TL/day</h2>
+        <h2 style="position:absolute;top:30%;left:80%;"><?php echo $rent; ?> $/day</h2>
 
     </div>
 
     <form action="#" method="post">
+        <?php
+        if (count($errors) > 0) : ?>
+            <div class="error">
+                <?php foreach ($errors as $error) : ?>
+                    <p><?php echo $error ?></p>
+                <?php endforeach ?>
+            </div>
+        <?php  endif ?>
         <div  style="position:absolute;top:40%;">
             <h1>Start Date</h1>
             <input type="date" name="startDate" >
@@ -160,8 +193,9 @@ background-size: cover;
         </div>
         <h3 style="position:absolute;top:70%; font-size: 1.5vw;">About Car:  <?php echo $plate." || ".$info?></h3>
     <div class="row">
-        <input type="submit" value="Rent" style="position:absolute;top:90%;left:45%;">
+        <input type="submit" value="Rent" name="Rent" style="position:absolute;top:90%;left:45%;">
     </div>
+
     </form>
 </div>
 </body>
