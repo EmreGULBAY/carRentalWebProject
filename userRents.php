@@ -1,3 +1,72 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<?php
+    session_start();
+?>
+<?php
+$db = mysqli_connect("localhost", "root", "", "web");
+if ($db->connect_error) {
+    die("Connection failed: " . $db->connect_error);
+}
+$id = $_SESSION['id'];
+$carid=$_SESSION['carid'];
+date_default_timezone_set("Europe/Berlin");
+$date = date('Y-m-d');
+$pastRes = [];
+$currentRes = [];
+$futureRes = [];
+$future = [];
+$sql = "SELECT *
+          FROM reservation
+          WHERE id = '$id' AND (startdate < '$date' AND enddate < '$date')";
+$result = $db->query($sql);
+while ($row = $result->fetch_assoc()) {
+    $start=$row['startdate'];
+    $end=$row['enddate'];
+    $cost=$row['cost'];
+    $pastRes[]= $row['startdate']."   ".$row['enddate']."    ".$row['cost']."$";
+}
+$sql = "SELECT *
+          FROM reservation
+          WHERE id = '$id' AND (startdate <= '$date' AND enddate >= '$date')";
+$result = $db->query($sql);
+while ($row = $result->fetch_assoc()) {
+    $start=$row['startdate'];
+    $end=$row['enddate'];
+    $cost=$row['cost'];
+    $currentRes[]= $row['startdate']."   ".$row['enddate']."    ".$row['cost']."$";
+}
+$sql = "SELECT *
+          FROM reservation
+          WHERE id = '$id' AND (startdate > '$date' AND enddate > '$date')";
+$result = $db->query($sql);
+while ($row = $result->fetch_assoc()) {
+    $future[] = $row['startdate'];
+    $start=$row['startdate'];
+    $end=$row['enddate'];
+    $cost=$row['cost'];
+    $futureRes[]= $row['startdate']."   ".$row['enddate']."    ".$row['cost']."$";
+}
+if (count($future) == 0) {
+
+}
+else {
+    foreach ($future as $value){
+        if (isset($_POST["$value"])) {
+            $sql = "DELETE FROM reservation WHERE  startdate = '$value' AND id = '$id'";
+            $query = "update cars set status=1 where carid='$carid'";
+            mysqli_query($db, $query);
+
+            $query2 = "Insert into canceledreservation(id,carid,startdate,enddate,cost)values
+                        ('$id','$carid','$start','$end','$cost')";
+            mysqli_query($db,$query2);
+            if ($db->query($sql) === TRUE) {
+            } else {
+            }
+            header("location:userRents.php");
+        }
+    }
+}
+?>
 <style>
     @keyframes anime{
         0%{
@@ -150,11 +219,11 @@
         padding: 5px 10px;
     }
     .Rents{
-        position: absolute;
+        position: fixed;
         display: block;
         width:30%;
-        height: 40%;
-        top: 30%;
+        height: 35%;
+        top: 10%;
         left: 10%;
         margin: 10px;
         border:solid black 5px;
@@ -165,12 +234,27 @@
         overflow-y: scroll;
     }
     .CurrentRents{
-        position: absolute;
+        position: fixed;
         display: block;
         width:30%;
-        height: 40%;
-        top: 30%;
+        height: 35%;
+        top: 10%;
         left: 50%;
+        margin: 10px;
+        border:solid black 5px;
+        background: rgba(255, 255, 255, 0.7) fixed center center;
+        max-width: 100%;
+        background-size:contain;
+        padding:20px;
+        overflow-y: scroll;
+    }
+    .FutureRents{
+        position: fixed;
+        display: block;
+        width:30%;
+        height: 35%;
+        top: 55%;
+        left: 30%;
         margin: 10px;
         border:solid black 5px;
         background: rgba(255, 255, 255, 0.7) fixed center center;
@@ -186,13 +270,6 @@
         .navbar a{
             padding:10px 10px;
             font-size:3vw;
-        }
-        #Contact{
-            height:30%;
-        }
-
-        #Info{
-            height:25%;
         }
         #Wallet{
             height:65%;
@@ -263,7 +340,6 @@
             closeContact();
         }
     </script>
-    <a class="fa fa-book" onclick="openInfo()" style="position:absolute;left:20%;text-decoration: none;" href="#Info"> About</a>
     <script>
         function closeAdv(){
             document.getElementById("advertisement").style.display="none";
@@ -286,7 +362,6 @@
             openAdv();
         }
     </script>
-    <a class= "fa fa-phone" onclick="openContact()" style="position:absolute;left:40%;text-decoration: none;"href="#contact"> Contact</a>
     <script>
         function openContact() {
             document.getElementById("Contact").style.display = "block";
@@ -301,8 +376,7 @@
             openAdv();
         }
     </script>
-    <a class="fa fa-car" href="userRentCar.html" style="position: absolute;left:60%;text-decoration: none;">Rent</a>
-    <a class="fa fa-address-card" onclick="openProfile()" href="#profile" style="position:absolute;left:80%;text-decoration: none;">Profile</a>
+    <a class="fa fa-car" href="userRentCar.php" style="position: absolute;left:60%;text-decoration: none;">Rent</a>
     <script>
         function openProfile(){
             document.getElementById("Profile").style.display="block";
@@ -469,11 +543,66 @@
             Twitter</a>
     </div>
 </div>
+<form method="post">
 <div class="Rents">
-    <h1 style="position:absolute;left:30%;font-size:2vW;">Previous Rents</h1>
+    <h1 id="pastdate" style="position:absolute;left:30%;font-size:2vW;">Previous Rents</h1>
 </div>
 <div class="CurrentRents">
-    <h1 style="position:absolute;left:30%;font-size:2vW;">Active Rents</h1>
+    <h1 id="currentdate" style="position:absolute;left:30%;font-size:2vW;">Active Rents</h1>
 </div>
+<div class="FutureRents">
+    <h1 id="upcomingdate" style="position:absolute;left:30%;font-size:2vW;">Future Rents</h1>
+</div>
+    </form>
+<script>
+
+    var futurestr = <?php echo json_encode($future); ?>;
+    var past = <?php echo json_encode($pastRes); ?>;
+    var current = <?php echo json_encode($currentRes); ?>;
+    var future = <?php echo json_encode($futureRes); ?>;
+    var pastres = document.getElementById("pastdate");
+    var currentres = document.getElementById("currentdate");
+    var futureres = document.getElementById("upcomingdate");
+    for (var i = 0; i < past.length; i++) {
+        var p = document.createElement("p");
+        var text = document.createTextNode(past[i]);
+        var close = document.createElement("input");
+        p.style.fontSize = '20px';
+        p.appendChild(text);
+        pastres.appendChild(p);
+    }
+    for (var i = 0; i < current.length; i++) {
+        var p = document.createElement("p");
+        var text = document.createTextNode(current[i]);
+        var close = document.createElement("input");
+        p.style.fontSize = '20px';
+        p.appendChild(text);
+        currentres.appendChild(p);
+    }
+    for (var i = 0; i < future.length; i++) {
+        var p = document.createElement("p");
+        var text = document.createTextNode(future[i]);
+        var close = document.createElement("input");
+        var update = document.createElement("input");
+        close.type = "submit";
+        close.name = futurestr[i];
+        close.value = "Cancel";
+        close.style.height = "20px";
+        close.style.position="absolute";
+        close.style.left="320px";
+        p.style.fontSize = '20px';
+        update.type="submit";
+        update.value="update";
+        update.style.position="absolute";
+        update.style.left="250px";
+        p.style.position="relative";
+        p.style.left="-100px";
+        p.appendChild(text);
+        p.appendChild(close);
+        p.appendChild(update);
+        futureres.appendChild(p);
+
+    }
+</script>
 </body>
 </html>
