@@ -14,11 +14,25 @@ while ($row = $result->fetch_assoc()) {
     $carImg[$row['carid']]= $row['image'];
 
 }
+$sql2="select count(*) as x from cars";
+$result=mysqli_query($db,$sql2);
+$results=mysqli_fetch_assoc($result);
+$City=[];
+$carBrand=[];
+$Type=[];
+$count=$results['x'];
+
 $sql = "SELECT city
             FROM cities;";
 $result = $db->query($sql);
 while ($row = $result->fetch_assoc()) {
     $City[]= $row['city'];
+}
+$sql = "SELECT  distinct type
+            FROM cars;";
+$result = $db->query($sql);
+while ($row = $result->fetch_assoc()) {
+    $Type[]= $row['type'];
 }
 $sql = "SELECT DISTINCT brand
             FROM cars;";
@@ -28,16 +42,69 @@ while ($row = $result->fetch_assoc()) {
 }
 
 $cars= [];
+
 if (isset($_POST["submit"])) {
 
     $brand = $_POST["brand"];
     $city = $_POST["City"];
+    $type = $_POST["Type"];
     $start = $_POST["startdate"];
     $end = $_POST["enddate"];
     if (empty($start) || empty($end)) {
-        if ($city == "All cities" && $brand == "All cars") {
+        if ($city == "All cities" && $brand == "All cars" && $type== "All types") {
             $sql = "SELECT *
                   FROM cars where status=1";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
+            $result = $db->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+
+        }
+        else if ($city == "All cities" && $brand=="All cars") {
+            $sql = "SELECT *
+                  FROM cars
+                  WHERE status =1 and type='$type'";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and type='$type'";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
+            $result = $db->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+        }
+        else if ($type == "All types" && $brand=="All cars") {
+            $sql = "SELECT *
+                  FROM cars
+                  WHERE status =1 and city='$city'";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and city='$city'";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
+            $result = $db->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+        }
+        else if ($city == "All cities" && $type=="All types") {
+            $sql = "SELECT *
+                  FROM cars
+                  WHERE status =1 and brand='$brand'";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and brand='$brand'";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
             $result = $db->query($sql);
             while ($row = $result->fetch_assoc()) {
                 $cars[]= $row['carid'];
@@ -47,18 +114,44 @@ if (isset($_POST["submit"])) {
         else if ($city == "All cities") {
             $sql = "SELECT *
                   FROM cars
-                  WHERE status =1 and brand = '$brand'";
+                  WHERE status =1 and brand = '$brand' and type='$type'";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and brand = '$brand' and type='$type'";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
             $result = $db->query($sql);
             while ($row = $result->fetch_assoc()) {
                 $cars[]= $row['carid'];
                 $carArray[]= $row['image'];
             }
         }
+        else if ($type == "All types") {
+            $sql = "SELECT *
+                  FROM cars
+                  WHERE status =1 and brand = '$brand' and city='$city'";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and brand = '$brand' and city='$city'";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
+            $result = $db->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+        }
+
         else if ($brand == "All cars") {
             $sql = "SELECT *
                   FROM cars
-                  WHERE status=1 and  city = '$city'
+                  WHERE status=1 and  city = '$city' and type='$type'
                   ";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and city = '$city' and type='$type'";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
             $result = $db->query($sql);
 
             while ($row = $result->fetch_assoc()) {
@@ -70,9 +163,16 @@ if (isset($_POST["submit"])) {
 
             $sql = "SELECT *
                   FROM cars
-                  WHERE status=1 and(city = '$city') AND (brand = '$brand' AND carid NOT IN (SELECT carid
+                  WHERE status=1 and(city = '$city') and(type='$type') AND (brand = '$brand' AND carid NOT IN (SELECT carid
                           FROM reservation
                           WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')))";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and(city = '$city') and(type='$type') AND (brand = '$brand' AND carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')))";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
             $result = $db->query($sql);
             while ($row = $result->fetch_assoc()) {
                 $cars[]= $row['carid'];
@@ -293,6 +393,11 @@ else{foreach ($cars as $value) {
         <select class="selections" name="City" id="City">
             <option value="All cities">All cities</option>
         </select>
+        <p id="Type">Type:
+            <select class="selections" name="Type" id="types">
+                <option value="All types">All types</option>
+            </select>
+        <p style="color:red;font-size: 1.2vw;"><?php echo $count?> Cars found!</p>
     <input type="submit" style="margin-top:-5px;position:absolute;top:70%; right:30%;" name="submit" value="Search"></p>
     </form>
 </div>
@@ -325,6 +430,18 @@ else{foreach ($cars as $value) {
     brandlist.appendChild(option);
     }
     brandselect.appendChild(brandlist);
+    var cartype = <?php echo json_encode($Type); ?>;
+    var typeselect = document.getElementById("Type");
+    var typelist = document.getElementById("types");
+    typelist.classList.add("selections");
+    for (var i = 0; i < cartype.length; i++) {
+        var option = document.createElement("option");
+        option.value = cartype[i];
+        option.name = cartype[i];
+        option.text = cartype[i];
+        typelist.appendChild(option);
+    }
+    typeselect.appendChild(typelist);
     var cararray = <?php echo json_encode($carArray); ?>;
     var carids = <?php echo json_encode($cars); ?>;
     var element = document.getElementById("catalogs");
