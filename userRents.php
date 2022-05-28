@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <?php
-    session_start();
+session_start();
 ?>
 <?php
 $db = mysqli_connect("localhost", "root", "", "web");
@@ -8,17 +8,33 @@ if ($db->connect_error) {
     die("Connection failed: " . $db->connect_error);
 }
 $id = $_SESSION['id'];
-$carid=$_SESSION['carid'];
 date_default_timezone_set("Europe/Berlin");
 $date = date('Y-m-d');
 $pastRes = [];
 $currentRes = [];
 $futureRes = [];
 $future = [];
+$carid="";
+$resid="";
+$start2="";
+$end2="";
 $sql = "SELECT *
           FROM reservation
           WHERE id = '$id' AND (startdate < '$date' AND enddate < '$date')";
 $result = $db->query($sql);
+$result2=mysqli_query($db,$sql);
+if(mysqli_fetch_assoc($result2)!=null){
+$carids=mysqli_fetch_assoc($result2);
+if($carids!=null)
+    $carid=$carids['carid'];
+}
+$result3=mysqli_query($db,$sql);
+if(mysqli_fetch_assoc($result3)!=null){
+    $resids=mysqli_fetch_assoc($result3);
+    if($resids!=null)
+    $resid=$resids['reservationid'];
+}
+
 while ($row = $result->fetch_assoc()) {
     $start=$row['startdate'];
     $end=$row['enddate'];
@@ -41,8 +57,6 @@ $sql = "SELECT *
 $result = $db->query($sql);
 while ($row = $result->fetch_assoc()) {
     $future[] = $row['startdate'];
-    $start=$row['startdate'];
-    $end=$row['enddate'];
     $cost=$row['cost'];
     $futureRes[]= $row['startdate']."   ".$row['enddate']."    ".$row['cost']."$";
 }
@@ -53,19 +67,30 @@ else {
     foreach ($future as $value){
         if (isset($_POST["$value"])) {
             $sql = "DELETE FROM reservation WHERE  startdate = '$value' AND id = '$id'";
-            $query = "update cars set status=1 where carid='$carid'";
-            mysqli_query($db, $query);
-
-            $query2 = "Insert into canceledreservation(id,carid,startdate,enddate,cost)values
-                        ('$id','$carid','$start','$end','$cost')";
-            mysqli_query($db,$query2);
             if ($db->query($sql) === TRUE) {
             } else {
             }
             header("location:userRents.php");
         }
     }
+    foreach ($future as $value2) {
+        if (isset($_POST["$value2"])) {
+            $sql = "select reservationid from reservation where id='$id' and startdate='$value2'";
+            if ($db->query($sql) === TRUE) {
+                $result = $db->query($sql);
+                if (mysqli_fetch_assoc($result) != null) {
+                    $resids = mysqli_fetch_assoc($result);
+                    $resid=$resids['reservationid'];
+                    if ($resids != null)
+                        $_SESSION['resId'] = $resid;
+                }
+            } else {
+
+            }
+        }
+    }
 }
+
 ?>
 <style>
     @keyframes anime{
@@ -544,19 +569,20 @@ else {
     </div>
 </div>
 <form method="post">
-<div class="Rents">
-    <h1 id="pastdate" style="position:absolute;left:30%;font-size:2vW;">Previous Rents</h1>
-</div>
-<div class="CurrentRents">
-    <h1 id="currentdate" style="position:absolute;left:30%;font-size:2vW;">Active Rents</h1>
-</div>
-<div class="FutureRents">
-    <h1 id="upcomingdate" style="position:absolute;left:30%;font-size:2vW;">Future Rents</h1>
-</div>
-    </form>
+    <div class="Rents">
+        <h1 id="pastdate" style="position:absolute;left:30%;font-size:2vW;">Previous Rents</h1>
+    </div>
+    <div class="CurrentRents">
+        <h1 id="currentdate" style="position:absolute;left:30%;font-size:2vW;">Active Rents</h1>
+    </div>
+    <div class="FutureRents">
+        <h1 id="upcomingdate" style="position:absolute;left:30%;font-size:2vW;">Future Rents</h1>
+    </div>
+</form>
 <script>
 
     var futurestr = <?php echo json_encode($future); ?>;
+    var futurestr2 = <?php echo json_encode($future);?>;
     var past = <?php echo json_encode($pastRes); ?>;
     var current = <?php echo json_encode($currentRes); ?>;
     var future = <?php echo json_encode($futureRes); ?>;
@@ -568,6 +594,13 @@ else {
         var text = document.createTextNode(past[i]);
         var close = document.createElement("input");
         p.style.fontSize = '20px';
+        close.type = "submit";
+        close.name = past[i];
+        close.value = "Review";
+        close.style.height = "20px";
+        close.style.position="absolute";
+        close.style.left="250px";
+        close.formAction="userReview.php";
         p.appendChild(text);
         pastres.appendChild(p);
     }
@@ -597,6 +630,8 @@ else {
         update.style.left="250px";
         p.style.position="relative";
         p.style.left="-100px";
+        update.name=futurestr2[i];
+        update.formAction="userEdit.php";
         p.appendChild(text);
         p.appendChild(close);
         p.appendChild(update);

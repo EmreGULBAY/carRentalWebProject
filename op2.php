@@ -6,6 +6,7 @@ if ($db->connect_error) {
     die("Connection failed: " . $db->connect_error);
 }
 $id=$_SESSION['id'];
+$resId=$_SESSION['resId'];
 $query="select * from userwallet where id='$id';";
 $results = mysqli_query($db, $query);
 $result = mysqli_query($db, $query);
@@ -20,7 +21,7 @@ $image =$_SESSION["image"];
 $dateNow = date("Y-m-d");
 $errors=array();
 $diff = abs(strtotime($end) - strtotime($start));
-
+$dateNow = date("Y-m-d");
 $years = floor($diff / (365*60*60*24));
 $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
 $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
@@ -29,11 +30,18 @@ $result = mysqli_query($db, $carStatu);
 $car = mysqli_fetch_assoc($result);
 $status=$car['status'];
 $totalCost=($months*30*$rent)+($days*$rent);
-$newWallet=$wallet-$totalCost;
-
+$query="select * from reservation where id='$id'";
+$result=mysqli_query($db,$query);
+$results=mysqli_fetch_assoc($result);
+$oldCost=0;
+if($results!=null)
+$oldCost=$results['cost'];
+$newWallet=$wallet-$totalCost+$oldCost;
 if(isset($_POST['Rent'])){
     if($status==1) {
         if ($wallet >= $totalCost) {
+            $sql="delete from reservation where reservationid='$resId'";
+            mysqli_query($db,$sql);
             $query = "INSERT INTO reservation(startdate, enddate, cost, carid,id,datetime)
             VALUES('$start','$end','$totalCost','$carid','$id','$dateNow')";
             mysqli_query($db, $query);
@@ -45,16 +53,13 @@ if(isset($_POST['Rent'])){
                 ((startdate BETWEEN '$start' AND '$end') OR
                 (enddate BETWEEN '$start' AND '$end') OR
                 ('$start' BETWEEN startdate AND enddate) OR
-                ('$end' BETWEEN startdate AND enddate))";
+                ('$end' BETWEEN startdate AND enddate)) and id<>'$id'";
             $result = $db->query($sql);
-
             if (mysqli_num_rows($result) > 0) {
                 array_push( $errors,'Sorry the car is already reserved!');
             }
-            else{
-                $query3 = "update cars set status='0' where carid='$carid'";
-                mysqli_query($db, $query3);
-            }
+            $sql2="delete from reservation where id='$id'";
+            mysqli_query($db,$sql2);
             header("Location:userMainPage.php");
         } else {
             array_push($errors, 'You dont have enough money to rent!');
@@ -162,24 +167,24 @@ if(isset($_POST['Rent'])){
        style="color:red"> Home</a>
 </div>
 <div class="graySquare">
-<div class="round">
-    <img src="<?php echo $image; ?>"  style="width:30%; height:30%;position:absolute;top:5%;left:35%;border-radius:85px;">
-    <h2 style=";position:absolute;top:30%;">Location: <?php echo $location ?> </h2>
-    <h2 style="position:absolute;top:30%;left:80%;"><?php echo $rent; ?> $/day</h2>
-    <form action="#" method="post">
-        <?php
-        if (count($errors) > 0) : ?>
-            <div class="error">
-                <?php foreach ($errors as $error) : ?>
-                    <p><?php echo $error ?></p>
-                <?php endforeach ?>
+    <div class="round">
+        <img src="<?php echo $image; ?>"  style="width:30%; height:30%;position:absolute;top:5%;left:35%;border-radius:85px;">
+        <h2 style=";position:absolute;top:30%;">Location: <?php echo $location ?> </h2>
+        <h2 style="position:absolute;top:30%;left:80%;"><?php echo $rent; ?> $/day</h2>
+        <form action="#" method="post">
+            <?php
+            if (count($errors) > 0) : ?>
+                <div class="error">
+                    <?php foreach ($errors as $error) : ?>
+                        <p><?php echo $error ?></p>
+                    <?php endforeach ?>
+                </div>
+            <?php  endif ?>
+            <h1 style="position:absolute;top:50%;left:30%;">TOTAL COST: <?php echo $totalCost."$"?></h1>
+            <div class="row">
+                <input type="submit" value="Update" name="Rent" style="position:absolute;top:80%;left:45%;">
             </div>
-        <?php  endif ?>
-        <h1 style="position:absolute;top:50%;left:30%;">TOTAL COST: <?php echo $totalCost."$"?></h1>
-        <div class="row">
-            <input type="submit" value="Rent" name="Rent" style="position:absolute;top:80%;left:45%;">
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 </body>
 </html>

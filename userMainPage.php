@@ -72,6 +72,21 @@
         padding:20px;
         text-decoration: none;
     }
+    #Comment {
+        position: absolute;
+        display: none;
+        width: 35%;
+        height: 40%;
+        top: 30%;
+        left: 40%;
+        margin: 10px;
+        border:solid black 5px;
+        background: rgba(255, 255, 255, 0.7) fixed center center;
+        max-width: 100%;
+        background-size:contain;
+        padding:20px;
+        text-decoration: none;
+    }
     .navbar a {
         float: left;
         color: red;
@@ -134,6 +149,18 @@
         border:none;
     }
     .closeButton2:hover{
+        background: red;
+        color:white;
+    }
+    .closeButton1{
+        position:absolute;
+        top:3%;
+        left:92%;
+        background:rgba(0,0,0,0);
+        color:black;
+        border:none;
+    }
+    .closeButton1:hover{
         background: red;
         color:white;
     }
@@ -349,6 +376,14 @@
         function closeWallet(){
             document.getElementById("Wallet").style.display="none";
         }
+        function onComment(){
+            document.getElementById("Comment").style.display="block";
+            closeContact();
+            closeInfo();
+        }
+        function closeComment(){
+            document.getElementById("Comment").style.display="none";
+        }
     </script>
 </div>
 <div id="Profile" onclick="closeProfile()">
@@ -368,6 +403,7 @@
     $resultQuery2=mysqli_fetch_assoc($resultQuery);
     $userAmount=$resultQuery2['amount'];
     echo $userAmount;
+    $_SESSION['id'] = $userID;
     ?>
     <form>
         <div class="row">
@@ -385,7 +421,7 @@
     </form>
 </div>
 <div id="ChangePass">
-    <form method="post" action="userMainPage.php">
+    <form method="post" >
         <div class="row">
             <div class="col-25">
                 <label for="passw">OLD PASSWORD</label>
@@ -459,10 +495,9 @@
         $userAmount=$userAmount+$newAmount;
         $q="update userWallet set amount='$userAmount' where id=$userID";
         mysqli_query($db,$q);
-        header("Location: userRentCar.php");
     }
     ?>
-    <form method="post" action="#">
+    <form method="post" >
         <div class="row">
             <div class="col-25">
                 <label for="cardNo">Card No</label>
@@ -477,14 +512,6 @@
             </div>
             <div class="col-75">
                 <input class="inputs" type="text" id="fname" required>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-25">
-                <label for="date">Date</label>
-            </div>
-            <div class="col-75">
-                <input class="inputs" type="date" id="date" required>
             </div>
         </div>
         <div class="row">
@@ -509,11 +536,12 @@
         </div>
         <div class="row">
             <br>
-            <input type="submit" value="X" onclick="closeWallet()" class="closeButton2">
+            <input type="submit" value="X" onclick="closeWallet()" class="closeButton2" >
         </div>
     </form>
 
 </div>
+
 
 <div id="Info" onclick="closeInfo()">
     <div>
@@ -521,8 +549,17 @@
         <p  style=" position:absolute;left:10px;font-size: 2vw;">This is a car rental website.You can rent a car online.</p>
     </div>
 </div>
-<div id="Contact" onclick="closeContact()">
+<div id="Contact">
     <div>
+        <?php
+        $id=$_SESSION['id'];
+            if(isset($_POST['comment'])){
+                $comment=$_POST['com'];
+                $sql="insert into usercomment(id,comment)values('$id','$comment')";
+                mysqli_query($db,$sql);
+            }
+
+        ?>
         <h2 style="font-size: 3vw;">Our connection addresses</h2>
         <a class="fa fa-facebook" style="font-size: 3vw;
          color:darkblue" href="https://www.facebook.com/">
@@ -532,13 +569,24 @@
         <a class="fa fa-twitter" style="font-size: 3vw;
          color:cornflowerblue" href="https://www.twitter.com/" >
             Twitter</a>
+        <br><br>
+    <form method="post">
+        <input class="inputs"  type="text" placeholder="enter your comment" name="com">
+        <input value="comment"  type="submit" placeholder="enter your comment" name="comment">
+    </form>
+        <input type="submit" onclick="closeContact()" class="closeButton1" value="X">
     </div>
 </div>
 <div id="advertisement">
-    <h2 class="advert">Rent between 18.00 and 00.00 for a special price!</h2>
+    <h2 class="advert">You can now filter for car types!</h2>
 </div>
 <div id="advertisement2" >
     <h2 class="advert">We have brand-new cars now on our filo and waiting four you!</h2>
+</div>
+<div id="Comment">
+<form method="post">
+
+</form>
 </div>
 </body>
 </html>

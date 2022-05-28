@@ -6,6 +6,7 @@ $db = mysqli_connect("localhost", "root", "", "web");
 if ($db->connect_error) {
     die("Connection failed: " . $db->connect_error);
 }
+$dateNow = date("Y-m-d");
 $id = $_SESSION['id'];
 $sql = "SELECT *
           FROM cars;";
@@ -14,6 +15,7 @@ while ($row = $result->fetch_assoc()) {
     $carImg[$row['carid']]= $row['image'];
 
 }
+$errors=[];
 $sql2="select count(*) as x from cars";
 $result=mysqli_query($db,$sql2);
 $results=mysqli_fetch_assoc($result);
@@ -40,7 +42,7 @@ $result = $db->query($sql);
 while ($row = $result->fetch_assoc()) {
     $carBrand[]= $row['brand'];
 }
-
+$dateNow = date("Y-m-d");
 $cars= [];
 
 if (isset($_POST["submit"])) {
@@ -163,7 +165,7 @@ if (isset($_POST["submit"])) {
 
             $sql = "SELECT *
                   FROM cars
-                  WHERE status=1 and(city = '$city') and(type='$type') AND (brand = '$brand' AND carid NOT IN (SELECT carid
+                  WHERE status=1 and(city = '$city') and(type='$type') AND (brand = '$brand') AND carid NOT IN (SELECT carid
                           FROM reservation
                           WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')))";
             $sql2 = "SELECT *,count(*) as total
@@ -180,8 +182,148 @@ if (isset($_POST["submit"])) {
             }
         }
     }
+    else{
+        if($end<=$start){
+            array_push( $errors,'End date cannot be lower or equal to start date!');
+        }
+        if($start<$dateNow|| $end<$dateNow){
+            array_push($errors,'Choose valid date!');
+        }
+        if ($city == "All cities" && $brand == "All cars" && $type== "All types") {
+            $sql = "SELECT *
+                  FROM cars where status=1 AND carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end'))";
+            $result = $db->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+
+        }
+        else if ($city == "All cities" && $brand=="All cars") {
+            $sql = "SELECT *
+                  FROM cars
+                  WHERE status =1 and type='$type'AND carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end'))";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and type='$type' AND carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end'))";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
+            $result = $db->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+        }
+        else if ($type == "All types" && $brand=="All cars") {
+            $sql = "SELECT *
+                  FROM cars
+                  WHERE status =1 and city='$city' carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and city='$city' carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
+            $result = $db->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+        }
+        else if ($city == "All cities" && $type=="All types") {
+            $sql = "SELECT *
+                  FROM cars
+                  WHERE status =1 and brand='$brand' carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and brand='$brand' carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
+            $result = $db->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+        }
+        else if ($city == "All cities") {
+            $sql = "SELECT *
+                  FROM cars
+                  WHERE status =1 and brand = '$brand' and type='$type' carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and brand = '$brand' and type='$type' carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
+            $result = $db->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+        }
+        else if ($type == "All types") {
+            $sql = "SELECT *
+                  FROM cars
+                  WHERE status =1 and brand = '$brand' and city='$city' carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and brand = '$brand' and city='$city' carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')" ;
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
+            $result = $db->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+        }
+
+        else if ($brand == "All cars") {
+            $sql = "SELECT *
+                  FROM cars
+                  WHERE status=1 and  city = '$city' and type='$type' carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')
+                  ";
+            $sql2 = "SELECT *,count(*) as total
+                  FROM cars where status=1 and city = '$city' and type='$type ' carid NOT IN (SELECT carid
+                          FROM reservation
+                          WHERE (startdate BETWEEN '$start' AND '$end') OR (enddate BETWEEN '$start' AND '$end')";
+            $result=mysqli_query($db,$sql2);
+            $data=mysqli_fetch_assoc($result);
+            $count=$data['total'];
+            $result = $db->query($sql);
+
+            while ($row = $result->fetch_assoc()) {
+                $cars[]= $row['carid'];
+                $carArray[]= $row['image'];
+            }
+        }
+
+    }
+
 }
 else {
+
     $sql = "SELECT *
               FROM cars where status=1;";
     $result = $db->query($sql);
@@ -229,6 +371,19 @@ else{foreach ($cars as $value) {
             background-attachment: fixed;
             background-size: cover;
         }
+        .error {
+            width: 92%;
+            margin: 0px auto;
+            padding: 10px;
+            top:80%;
+            right:2%;
+            border: 1px solid #a94442;
+            color: #a94442;
+            background: #f2dede;
+            border-radius: 5px;
+            text-align: left;
+            position:absolute;
+        }
         @keyframes anime{
             0%{
                 background: url("araba1.jpg") no-repeat fixed center center;
@@ -264,7 +419,7 @@ else{foreach ($cars as $value) {
             background-color: rgba(255, 255, 255, 0.7);
             text-align: center;
             width: 30%;
-            height: 60%;
+            height: 65%;
             padding: 20px;
             border:solid 5px black;
             position: absolute;
@@ -377,6 +532,14 @@ else{foreach ($cars as $value) {
 </div>
 <div class="graySquare">
     <form action="#" method="post">
+        <?php
+        if (count($errors) > 0) : ?>
+            <div class="error">
+                <?php foreach ($errors as $error) : ?>
+                    <p><?php echo $error ?></p>
+                <?php endforeach ?>
+            </div>
+        <?php  endif ?>
     <h1>Options</h1>
         <p id="carBrand">Brand:
             <select class="selections" id="brands" name = "brand">
@@ -398,7 +561,7 @@ else{foreach ($cars as $value) {
                 <option value="All types">All types</option>
             </select>
         <p style="color:red;font-size: 1.2vw;"><?php echo $count?> Cars found!</p>
-    <input type="submit" style="margin-top:-5px;position:absolute;top:70%; right:30%;" name="submit" value="Search"></p>
+    <input type="submit" style="margin-top:-5px;position:absolute;top:68%; right:30%;" name="submit" value="Search"></p>
     </form>
 </div>
 <div id="catalogs" class="catalog">

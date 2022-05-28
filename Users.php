@@ -1,26 +1,50 @@
 
 <?php
 $db = mysqli_connect("localhost", "root", "", "web");
+$users=[];
+
+$date=date("Y-m-d");
 if ($db->connect_error) {
     die("Connection failed: " . $db->connect_error);
 }
-$sql = "SELECT *
-              FROM users;";
-$result = $db->query($sql);
-while ($row = $result->fetch_assoc()) {
-    $userArray[] = $row['id'];
-    $users[] = $row['username'];
+
+else {
+    $sql2 = "select sum(cost) as total,count(*) as num from reservation where datetime='$date'";
+    $result=mysqli_query($db,$sql2);
+    $results=mysqli_fetch_assoc($result);
+    $income=$results['total'];
+    $number=$results['num'];
+    $sql = "SELECT *
+              FROM users ";
+    $result = $db->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $users[]= $row['id'];
+        $usernames[] =$row['username'];
+        $statuses[]=$row ['position'];
+    }
 }
-$sql = "SELECT * from userwallet";
-$result = $db ->query($sql);
-while($row = $result->fetch_assoc()){
-    $wallet[]= $row['amount'];
+foreach ($users as $value) {
+    if (isset($_POST["$value"])){
+        $sql = "select * from users where id='$value'";
+        $result=mysqli_query($db,$sql);
+        $result2=mysqli_fetch_assoc($result);
+        $pos=$result2['position'];
+        if($pos==0){
+            $sql="update users set position=1 where id='$value'";
+            mysqli_query($db,$sql);
+        }
+        else if($pos ==1){
+            $sql="update users set position=0 where id='$value'";
+            mysqli_query($db,$sql);
+            $sql2="delete from reservation where id='$value' and startdate>'$date'";
+            mysqli_query($db,$sql2);
+        }
+    }
 }
-$sql = "SELECT * from users";
-$result = $db ->query($sql);
-while($row = $result->fetch_assoc()){
-    $phones[]= $row['phone'];
-}
+$sql="select count(*) as x from users";
+$result=mysqli_query($db,$sql);
+$results=mysqli_fetch_assoc($result);
+$count=$results['x'];
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!DOCTYPE html>
@@ -161,6 +185,16 @@ while($row = $result->fetch_assoc()){
                 display: inline-block;
             }
         }
+        #report{
+            width: 25%;
+            height: 30%;
+            background-color: rgba(255, 255, 255, 0.7);
+            overflow-y: scroll;
+            border:black solid 5px;
+            position: absolute;
+            top: 25%;
+            left: 5%;
+        }
         .selections{
             width: 200px;
             font-size: 1vw;
@@ -193,12 +227,15 @@ while($row = $result->fetch_assoc()){
 </head>
 <body>
 <div class="navbar">
+
+    <a class="fa fa-home" href="adminPage.php"
+       style="color:red;text-decoration: none"> Home</a>
     <a  href="firstLogin.php"
         style="color:red;text-decoration: none;left:45%;position: absolute"> Sign Out</a>
 </div>
 <div class="navbar">
-    <a  href="Users.php"
-        style="color:red;text-decoration: none;left:20%;position: absolute"> Users</a>
+    <a  href="firstLogin.php"
+        style="color:red;text-decoration: none;left:45%;position: absolute"> Sign Out</a>
 </div>
 <form>
     <div class="row">
@@ -208,42 +245,56 @@ while($row = $result->fetch_assoc()){
     </div>
 </form>
     <div id="catalogs" class="catalog">
+        <p style="position: absolute;left:40%;font-size: 1.5vw;color:red;"><?php echo $count?> Active users</p><br>
     </div>
+<div id="report">
+    <h1 style="position: absolute;left:40%;font-size: 1.5vw;color:red;">REPORT</h1>
+    <br><br><br>
+    <p style="font-size: 1.2vw;text-align: center"> <?php echo "Total ".$number."  cars booked today"?></p>
+    <br>
+    <p style="font-size: 1.2vw;text-align: center"><?php echo "Total income is ".$income."$"?></p>
+</div>
 
     <script>
-        var userarray = <?php echo json_encode($userArray); ?>;
         var users = <?php echo json_encode($users); ?>;
-        var wallet = <?php echo json_encode($wallet); ?>;
-        var phones = <?php echo json_encode($phones); ?>;
+        var status= <?php echo json_encode($statuses);?>;
+        var username = <?php echo json_encode($usernames)?>;
         var element = document.getElementById("catalogs");
         var form = document.createElement("form");
         form.action = "#";
         form.method = "post";
-        for (var i = 0; i < userarray.length; i++) {
+        for (var i = 0; i < users.length; i++) {
             var p = document.createElement("p");
-            var p2 = document.createElement("p");
-            var p3 =document.createElement("p");
             var text = document.createTextNode(users[i]);
-            var text2 = document.createTextNode(wallet[i]);
-            var text3 = document.createTextNode(phones[i]);
+            var text2=document.createTextNode(status[i]);
+            var text3=document.createTextNode(username[i]);
+            var submit = document.createElement("input");
+            var statuses = document.createElement("p");
+            var positions = document.createElement("p");
+            var usernames = document.createElement("p");
+            submit.type = "submit";
+            submit.name = users[i];
+            submit.value = "update";
             p.name = users[i];
             p.id = users[i];
-            form.appendChild(p);
-            form.appendChild(p2);
-            form.appendChild(p3);
-            p2.style.position="relative";
-            p2.style.fontSize="40px";
-            p2.style.left="150px"
-            p2.style.top="-85px"
+            statuses.appendChild(text2);
+            statuses.style.position="relative";
+            statuses.style.bottom="85px";
+            statuses.style.left="300px";
+            statuses.style.fontSize="40px";
+            usernames.appendChild(text3);
+            usernames.style.position="relative";
+            usernames.style.bottom="175px";
+            usernames.style.left="150px";
+            usernames.style.fontSize="40px";
             p.appendChild(text);
+            p.appendChild(submit);
             p.style.position="relative";
             p.style.fontSize="40px";
-            p2.appendChild(text2);
-            p3.style.position="relative";
-            p3.style.fontSize="40px";
-            p3.style.left="300px"
-            p3.style.top="-170px"
-            p3.appendChild(text3);
+            form.appendChild(p);
+            form.appendChild(statuses);
+            form.appendChild(positions);
+            form.appendChild(usernames);
         }
         element.appendChild(form);
     </script>

@@ -28,8 +28,12 @@ $rent = $row["rent"];
 $location = $row["city"];
 $info = $row["info"];
 $plate=$row["plate"];
+$dateNow = date("Y-m-d");
 if (isset($_POST['Delete'])) {
-    if($status!=0){
+    $sql="select * from reservation where carid='$carId' and startdate<='$dateNow'";
+    $result = mysqli_query($db, $sql);
+    $car= mysqli_fetch_assoc($result);
+    if(!$car){
         $sql="delete  from cars where carid='$carId'";
         mysqli_query($db,$sql);
             header('Location:adminPage.php');
@@ -37,6 +41,13 @@ if (isset($_POST['Delete'])) {
     else{
         echo "<script>alert('You cannot delete car that is used!')</script>";
     }
+}
+else if(isset($_POST['Update'])){
+    if($status!=0){
+        header('Location:adminUpdate.php');
+    }
+    else
+        echo "<script>alert('You cannot update car that is used!')</script>";
 }
 ?>
 <html lang="en" dir="ltr">
@@ -149,7 +160,6 @@ if (isset($_POST['Delete'])) {
         <img src="<?php echo $image; ?>"  style="width:30%; height:30%;position:absolute;top:5%;left:35%;border-radius:85px;">
         <h2 style=";position:absolute;top:30%;">Location: <?php echo $location ?> </h2>
         <h2 style="position:absolute;top:30%;left:80%;"><?php echo $rent; ?> $/day</h2>
-
     </div>
 
     <form action="#" method="post">
@@ -169,9 +179,10 @@ if (isset($_POST['Delete'])) {
             <h1>End Date</h1>
             <input type="date" name="endDate"  >
         </div>
-        <h3 style="position:absolute;top:70%; left:20%;font-size: 1.5vw;">About Car:  <?php echo $plate." || ".$info?></h3>
+        <h3 style="position:absolute;top:70%; left:10%;font-size: 1.5vw;">About Car:  <?php echo $plate." || ".$info?></h3>
         <div class="row">
-            <input type="submit" value="Delete" name="Delete" style="position:absolute;top:90%;left:45%;">
+            <input type="submit" value="Delete" name="Delete" style="position:absolute;top:90%;left:30%;">
+            <input type="submit" value="Update" name="Update" style ="position:absolute;top:90%;left:60%;"
         </div>
 
     </form>
