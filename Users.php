@@ -28,17 +28,8 @@ foreach ($users as $value) {
         $sql = "select * from users where id='$value'";
         $result=mysqli_query($db,$sql);
         $result2=mysqli_fetch_assoc($result);
-        $pos=$result2['position'];
-        if($pos==0){
-            $sql="update users set position=1 where id='$value'";
-            mysqli_query($db,$sql);
-        }
-        else if($pos ==1){
-            $sql="update users set position=0 where id='$value'";
-            mysqli_query($db,$sql);
-            $sql2="delete from reservation where id='$value' and startdate>'$date'";
-            mysqli_query($db,$sql2);
-        }
+        $_SESSION['userid']=$value;
+        header("Location:adminUserRent.php");
     }
 }
 $sql="select count(*) as x from users";
@@ -274,7 +265,7 @@ $count=$results['x'];
             var usernames = document.createElement("p");
             submit.type = "submit";
             submit.name = users[i];
-            submit.value = "update";
+            submit.value = "reservations";
             p.name = users[i];
             p.id = users[i];
             statuses.appendChild(text2);
