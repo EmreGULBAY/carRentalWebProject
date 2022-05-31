@@ -15,8 +15,21 @@ $locat = "";
 $brand = "";
 $rent = "";
 $info = "";
+$type="";
+$dateNow=date("Y-m-d");
 $errors = array();
 $db = mysqli_connect('localhost', 'root', '', 'web');
+$sql = "select * from cars where carid='$carId'";
+$result=mysqli_query($db,$sql);
+$result2=mysqli_fetch_assoc($result);
+$oldPlate=$result2['plate'];
+$oldImage = $result2['image'];
+$oldLocat = $result2['city'];
+$oldBrand = $result2['brand'];
+$oldRent = $result2['rent'];
+$oldInfo = $result2['info'];
+$oldType = $result2['type'];
+$oldst = $result2['repair'];
 if (isset($_POST['Save'])) {
     $plate = mysqli_real_escape_string($db, $_POST['plate']);
     $image = $_POST['image'];
@@ -24,7 +37,13 @@ if (isset($_POST['Save'])) {
     $brand = $_POST['brand'];
     $rent = $_POST['rentCost'];
     $info = $_POST['info'];
+    $type= $_POST['type'];
+    $repair= $_POST['repair'];
 
+    $st=0;
+
+    if($repair=="Active")
+    $st=1;
     if (empty($plate)) {
         array_push($errors, "Plate is required");
     }
@@ -50,11 +69,27 @@ if (isset($_POST['Save'])) {
         if ($car['plate'] === $plate)
             array_push($errors, "Car exist!");
     }
+    $sql="select * from reservation where carid='$carId' and startdate<='$dateNow'";
+    $result = mysqli_query($db, $sql);
+    $car= mysqli_fetch_assoc($result);
+    if($st!=$oldst){
+        echo "<script>alert('Car is used!')</script>";
+    }
     if (count($errors) == 0) {
-        $sql = "update cars set plate='$plate',image='$image',city='$locat',brand='$brand',rent='$rent',info='$info'
+        if($oldst==0 && $st==1){
+        $sql = "update cars set plate='$plate',image='$image',city='$locat',brand='$brand',rent='$rent',info='$info',type='$type',repair='$st'
         where carid='$carId'";
-        mysqli_query($db, $sql);
-        header('location: adminPage.php');
+     mysqli_query($db, $sql);
+            $sql2="insert into repairedcars(carid,date) values('$carId','$dateNow')";
+            mysqli_query($db,$sql2);
+        }
+        else {
+            $sql = "update cars set plate='$plate',image='$image',city='$locat',brand='$brand',rent='$rent',info='$info',type='$type',repair='$st'
+        where carid='$carId'";
+            mysqli_query($db, $sql);
+        }
+
+    header('location: adminPage.php');
 
     }
 }
@@ -130,8 +165,8 @@ if (isset($_POST['Save'])) {
             position: relative;
             display: block;
             width:30%;
-            height: 70%;
-            top: 15%;
+            height: 85%;
+            top: 5%;
             left: 35%;
             margin: 10px;
             border:solid black 5px;
@@ -181,7 +216,7 @@ if (isset($_POST['Save'])) {
                 <label for="plate">Plate</label>
             </div>
             <div class="col-75">
-                <input class="inputs" type="text" id="plate" name="plate">
+                <input class="inputs" type="text" id="plate" name="plate" value="<?php echo $oldPlate?>">
             </div>
         </div>
         <div class="row">
@@ -189,7 +224,7 @@ if (isset($_POST['Save'])) {
                 <label for="image">Image</label>
             </div>
             <div class="col-75">
-                <input class ="inputs" type="text"  id="image" name="image">
+                <input class ="inputs" type="text"  id="image" name="image" value="<?php echo $oldImage?>">
             </div>
         </div>
         <div class="row">
@@ -197,7 +232,7 @@ if (isset($_POST['Save'])) {
                 <label for="locat">Location</label>
             </div>
             <div class="col-75">
-                <input class="inputs" type="text" id="locat" name="locat">
+                <input class="inputs" type="text" id="locat" name="locat" value="<?php echo $oldLocat?>">
             </div>
         </div>
         <div class="row">
@@ -205,7 +240,7 @@ if (isset($_POST['Save'])) {
                 <label for="info">Brand</label>
             </div>
             <div class="col-75">
-                <input class="inputs" type="text" id="info" name="brand">
+                <input class="inputs" type="text" id="info" name="brand" value="<?php echo $oldBrand?>">
             </div>
         </div>
         <div class="row">
@@ -213,7 +248,7 @@ if (isset($_POST['Save'])) {
                 <label for="rentCost">Rent cost/daily</label>
             </div>
             <div class="col-75">
-                <input class="inputs" type="text" id="rentCost" name="rentCost">
+                <input class="inputs" type="text" id="rentCost" name="rentCost" value="<?php echo $oldRent?>">
             </div>
         </div>
         <div class="row">
@@ -221,9 +256,21 @@ if (isset($_POST['Save'])) {
                 <label for="info">Info</label>
             </div>
             <div class="col-75">
-                <input class ="inputs" type="text"  id="info" name="info">
+                <input class ="inputs" type="text"  id="info" name="info" value="<?php echo $oldInfo?>">
             </div>
         </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="type">Type</label>
+            </div>
+            <div class="col-75">
+                <input class="inputs" type="text" id="type" name="type" value="<?php echo $oldType?>">
+            </div>
+        </div>
+        <input type="radio" id="html" name="repair" value="On repair">
+         <label for="html">On repair</label><br>
+        <input type="radio" id="css" name="repair" value="Active">
+         <label for="css">Active</label><br>
         <div class="row">
             <br>
             <input type="submit" value="Save"  name="Save">
