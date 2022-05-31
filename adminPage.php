@@ -43,11 +43,13 @@ if (isset($_POST["submit"])) {
     $brand = $_POST["brand"];
     $city = $_POST["City"];
     $type = $_POST["Type"];
-    if ($city == "All cities" && $brand == "All cars" && $type== "All types") {
+    $repair = $_POST["Repair"];
+         
+     if ($city == "All cities" && $brand == "All cars" && $type== "All types" ) {
         $sql = "SELECT *
-                  FROM cars where status=1";
+                  FROM cars where status=1 ";
         $sql2 = "SELECT *,count(*) as total
-                  FROM cars where status=1";
+                  FROM cars where status=1 ";
         $result=mysqli_query($db,$sql2);
         $data=mysqli_fetch_assoc($result);
         $count=$data['total'];
@@ -61,9 +63,9 @@ if (isset($_POST["submit"])) {
     else if ($city == "All cities" && $brand=="All cars") {
         $sql = "SELECT *
                   FROM cars
-                  WHERE status =1 and type='$type'";
+                  WHERE status =1 and type='$type'   ";
         $sql2 = "SELECT *,count(*) as total
-                  FROM cars where status=1 and type='$type'";
+                  FROM cars where status=1 and type='$type' ";
         $result=mysqli_query($db,$sql2);
         $data=mysqli_fetch_assoc($result);
         $count=$data['total'];
@@ -76,9 +78,9 @@ if (isset($_POST["submit"])) {
     else if ($type == "All types" && $brand=="All cars") {
         $sql = "SELECT *
                   FROM cars
-                  WHERE status =1 and city='$city'";
+                  WHERE status =1  and city='$city'";
         $sql2 = "SELECT *,count(*) as total
-                  FROM cars where status=1 and city='$city'";
+                  FROM cars where  status=1 and city='$city'";
         $result=mysqli_query($db,$sql2);
         $data=mysqli_fetch_assoc($result);
         $count=$data['total'];
@@ -91,9 +93,9 @@ if (isset($_POST["submit"])) {
     else if ($city == "All cities" && $type=="All types") {
         $sql = "SELECT *
                   FROM cars
-                  WHERE status =1 and brand='$brand'";
+                  WHERE status =1 and and brand='$brand'";
         $sql2 = "SELECT *,count(*) as total
-                  FROM cars where status=1 and brand='$brand'";
+                  FROM cars where status=1  and brand='$brand'";
         $result=mysqli_query($db,$sql2);
         $data=mysqli_fetch_assoc($result);
         $count=$data['total'];
@@ -106,9 +108,9 @@ if (isset($_POST["submit"])) {
     else if ($city == "All cities") {
         $sql = "SELECT *
                   FROM cars
-                  WHERE status =1 and brand = '$brand' and type='$type'";
+                  WHERE status =1  and brand = '$brand' and type='$type'";
         $sql2 = "SELECT *,count(*) as total
-                  FROM cars where status=1 and brand = '$brand' and type='$type'";
+                  FROM cars where status=1  and brand = '$brand' and type='$type'";
         $result=mysqli_query($db,$sql2);
         $data=mysqli_fetch_assoc($result);
         $count=$data['total'];
@@ -121,9 +123,9 @@ if (isset($_POST["submit"])) {
     else if ($type == "All types") {
         $sql = "SELECT *
                   FROM cars
-                  WHERE status =1 and brand = '$brand' and city='$city'";
+                  WHERE status =1 and repair=1 and brand = '$brand' and city='$city'";
         $sql2 = "SELECT *,count(*) as total
-                  FROM cars where status=1 and brand = '$brand' and city='$city'";
+                  FROM cars where status=1  and brand = '$brand' and city='$city'";
         $result=mysqli_query($db,$sql2);
         $data=mysqli_fetch_assoc($result);
         $count=$data['total'];
@@ -137,10 +139,10 @@ if (isset($_POST["submit"])) {
     else if ($brand == "All cars") {
         $sql = "SELECT *
                   FROM cars
-                  WHERE status=1 and  city = '$city' and type='$type'
+                  WHERE status=1  and  city = '$city' and type='$type'
                   ";
         $sql2 = "SELECT *,count(*) as total
-                  FROM cars where status=1 and city = '$city' and type='$type'";
+                  FROM cars where status=1  and city = '$city' and type='$type'";
         $result=mysqli_query($db,$sql2);
         $data=mysqli_fetch_assoc($result);
         $count=$data['total'];
@@ -155,7 +157,7 @@ if (isset($_POST["submit"])) {
 }
 else {
     $sql = "SELECT *
-              FROM cars;";
+              FROM cars ";
     $result = $db->query($sql);
     while ($row = $result->fetch_assoc()) {
         $carArray[]= $row['image'];
@@ -358,6 +360,21 @@ else{foreach ($cars as $value) {
     <a  href="Users.php"
         style="color:red;text-decoration: none;left:20%;position: absolute"> Users</a>
 </div>
+<form method="post">;
+    <div class="row">
+        <div class="col-75">
+            <input name="city2" type="text" >
+        </div>
+    </div>
+    <input type="submit" name="gönder" formaction="adminRes.php">
+</form>
+<?php
+if(isset($_POST["gönder"])){
+    $city=$_POST['city2'];
+    $_SESSION['city']=$city;
+}
+
+?>
 <form>
 <div class="row">
     <div class="col-75">
@@ -368,6 +385,7 @@ else{foreach ($cars as $value) {
 <div id="Sure">
 <div class="graySquare">
     <form action="#" method="post">
+
         <h1>Options</h1>
         <p id="carBrand">Brand:
             <select class="selections" id="brands" name = "brand">
@@ -378,6 +396,11 @@ else{foreach ($cars as $value) {
         <p id="CarCity">City:
             <select class="selections" name="City" id="City">
                 <option value="All cities">All cities</option>
+            </select>
+        <p id="Repair">Repair:
+            <select class="selections" name="Repair" id="Repair">
+                <option value="On repair">On repair</option>
+                <option value="Active">Active</option>
             </select>
         <p id="Type">Type:
             <select class="selections" name="Type" id="types">
